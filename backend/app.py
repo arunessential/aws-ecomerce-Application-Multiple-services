@@ -352,7 +352,8 @@ def send_order_receipt_email(order_payload):
 
     msg = Message(
         f"multicloud devops veera sir store - Order #{order_payload['id']}",
-        sender=app.config["MAIL_USERNAME"],
+       # sender=app.config["MAIL_USERNAME"],
+        sender=app.config["MAIL_DEFAULT_SENDER"],
         recipients=[order_payload["shipping_email"]],
     )
     text_body, html_body = build_order_receipt(order_payload)
