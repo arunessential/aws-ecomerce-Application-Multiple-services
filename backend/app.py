@@ -35,15 +35,38 @@ db_config = {
     "database": os.getenv("DB_NAME", "cloud"),
 }
 
+
+# app.config.update(
+#    MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.gmail.com"),
+#    MAIL_PORT=int(os.getenv("MAIL_PORT", "587")),
+#    MAIL_USE_TLS=True,
+#    MAIL_USERNAME=os.getenv("MAIL_USERNAME", ""),
+#    MAIL_PASSWORD=os.getenv("MAIL_PASSWORD", ""),
+# )
+# mail = Mail(app)
+
 app.config.update(
     MAIL_SERVER=os.getenv("MAIL_SERVER", "smtp.gmail.com"),
     MAIL_PORT=int(os.getenv("MAIL_PORT", "587")),
-    MAIL_USE_TLS=True,
+    MAIL_USE_TLS=os.getenv("MAIL_USE_TLS", "true").lower() == "true",
+    MAIL_USE_SSL=os.getenv("MAIL_USE_SSL", "false").lower() == "true",
     MAIL_USERNAME=os.getenv("MAIL_USERNAME", ""),
     MAIL_PASSWORD=os.getenv("MAIL_PASSWORD", ""),
+    MAIL_DEFAULT_SENDER=os.getenv(
+        "MAIL_DEFAULT_SENDER",
+        os.getenv("MAIL_USERNAME", "")
+    ),
+    MAIL_SUPPRESS_SEND=False,
 )
-mail = Mail(app)
 
+# Optional: print config for debugging
+print("MAIL_SERVER:", app.config["MAIL_SERVER"])
+print("MAIL_PORT:", app.config["MAIL_PORT"])
+print("MAIL_USERNAME:", app.config["MAIL_USERNAME"])
+print("MAIL_DEFAULT_SENDER:", app.config["MAIL_DEFAULT_SENDER"])
+print("MAIL_USE_TLS:", app.config["MAIL_USE_TLS"])
+
+mail = Mail(app)
 
 def get_db_connection():
     return pymysql.connect(
